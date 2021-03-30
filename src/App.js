@@ -8,7 +8,7 @@ function App() {
   return (
     <Container component="article" maxWidth="sm">
       <Typography variant="h3" component="h1" align="center" color='primary'>Formulário de cadastro</Typography>
-      <FormularioCadastro onSubmitForm={onSubmit} validateCPF={validatesCPF} maskCpf={maskCpf}/>
+      <FormularioCadastro onSubmitForm={onSubmit} validateCPF={validatesCPF} maskCpf={maskCpf} maskCep={maskCep}/>
     </Container>
   );
 }
@@ -32,6 +32,15 @@ function maskCpf(cpf){
   .replace(/(\d{3})(\d)/, '$1.$2')
   .replace(/(\d{3})(\d{1,2})/, '$1-$2')
   .replace(/(-\d{2})\d+?$/, '$1') // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
+}
+
+function maskCep(cep){
+  console.log(cep.replace(/^[0-9]{2}.[0-9]{3}-[0-9]{3}$/))
+  return cep
+  .replace(/\D/g, '') // substitui qualquer caracter que nao seja numero por nada
+  .replace(/(\d{2})(\d)/, '$1.$2')
+  .replace(/(\d{3})(\d)/, '$1-$2')
+  .replace(/(-\d{3})\d+?$/, '$1') // captura 2 numeros seguidos de um traço e não deixa ser digitado mais nada
 }
 
 export default App;
