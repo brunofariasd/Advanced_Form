@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextField, Button } from "@material-ui/core";
+import masksCadastro from "../../contexts/masksCadastro";
+import useMasks from "../../hooks/useMasks";
 
-function DadosEndereco({ onSubmitForm, maskCep }) {
+function DadosEndereco({ onSubmitForm }) {
   const [cep, setCep] = useState("");
   const [phone, setPhone] = useState("");
   const [endereco, setEndereco] = useState("");
   const [numero, setNumero] = useState("");
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
+  const mask = useMasks(useContext(masksCadastro))
 
   return (
     <form
@@ -19,7 +22,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
       <TextField
         value={cep}
         onChange={(event) => {
-          let tempCep = maskCep(event.target.value);
+          let tempCep = mask(event);
           if (tempCep.length >= 10) {
             tempCep = tempCep.substr(0, 10);
           }
@@ -27,6 +30,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="cep"
         label="Cep"
+        name="cep"
         variant="outlined"
         margin="normal"
         color="primary"
@@ -43,6 +47,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="phone"
         label="Phone"
+        name="phone"
         variant="outlined"
         margin="normal"
         color="primary"
@@ -60,6 +65,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="endereco"
         label="Endereco"
+        name="endereco"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -78,6 +84,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="numero"
         label="Numero"
+        name="numero"
         variant="outlined"
         margin="normal"
         color="primary"
@@ -95,6 +102,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="estado"
         label="Estado"
+        name="estado"
         variant="outlined"
         margin="normal"
         color="primary"
@@ -112,6 +120,7 @@ function DadosEndereco({ onSubmitForm, maskCep }) {
         }}
         id="cidade"
         label="Cidade"
+        name="cidade"
         variant="outlined"
         margin="normal"
         color="primary"

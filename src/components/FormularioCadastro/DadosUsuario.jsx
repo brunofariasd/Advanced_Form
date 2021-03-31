@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextField, Button } from "@material-ui/core";
+import validacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErrors from "../../hooks/useErrors";
 
 function DadosUsuario({ onSubmitForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, validates, next] = useErrors(useContext(validacoesCadastro))
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        onSubmitForm({ email, password });
+        if (next()){
+          onSubmitForm({ email, password });
+        }
       }}
     >
       <TextField
@@ -23,6 +28,7 @@ function DadosUsuario({ onSubmitForm }) {
         }}
         id="email"
         label="Email"
+        name="email"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -39,8 +45,14 @@ function DadosUsuario({ onSubmitForm }) {
           }
           setPassword(tempPassword);
         }}
+        onBlur={(event) => {
+          validates(event);
+        }}
+        error={!errors.password.valid}
+        helperText={errors.password.helperText}
         id="password"
         label="Password"
+        name="password"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -49,7 +61,7 @@ function DadosUsuario({ onSubmitForm }) {
         required
       />
       <Button type="submit" variant="contained" color="primary">
-        Cadastrar
+        Próximo
       </Button>
     </form>
   );

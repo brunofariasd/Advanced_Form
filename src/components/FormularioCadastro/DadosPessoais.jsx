@@ -1,18 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { TextField, FormControlLabel, Switch, Button } from "@material-ui/core";
+import masksCadastro from "../../contexts/masksCadastro";
+import validacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErrors from "../../hooks/useErrors";
+import useMasks from "../../hooks/useMasks";
 
-function DadosPessoais({onSubmitForm, validateCPF, maskCpf}) {
+function DadosPessoais({ onSubmitForm }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
   const [novidades, setNovidades] = useState(true);
   const [promocoes, setPromocoes] = useState(true);
-  const [errors, setErrors] = useState({cpf:{valid:true, helperText:''}});
+  const [errors, validates, next] = useErrors(useContext(validacoesCadastro))
+  const mask = useMasks(useContext(masksCadastro))
+
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        onSubmitForm({ nome, sobrenome, cpf, novidades, promocoes });
+        if (next()) {
+          onSubmitForm({ nome, sobrenome, cpf, novidades, promocoes });
+        }
       }}
     >
       <TextField
@@ -26,6 +34,7 @@ function DadosPessoais({onSubmitForm, validateCPF, maskCpf}) {
         }}
         id="nome"
         label="Nome"
+        name="cpf"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -43,6 +52,7 @@ function DadosPessoais({onSubmitForm, validateCPF, maskCpf}) {
         }}
         id="Sobrenome"
         label="Sobrenome"
+        name="sobrenome"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -52,20 +62,20 @@ function DadosPessoais({onSubmitForm, validateCPF, maskCpf}) {
       <TextField
         value={cpf}
         onChange={(event) => {
-          let tempCpf = maskCpf(event.target.value);
-          if (tempCpf.length > 14){
+          let tempCpf = mask(event);
+          if (tempCpf.length > 14) {
             tempCpf = tempCpf.substr(0, 14);
           }
-          setCpf(tempCpf)
+          setCpf(tempCpf);
         }}
-        onBlur={(event) =>{
-          const isValid = validateCPF(event.target.value);
-          setErrors({cpf: isValid});
+        onBlur={(event) => {
+          validates(event);
         }}
         error={!errors.cpf.valid}
         helperText={errors.cpf.helperText}
         id="CPF"
         label="CPF"
+        name="cpf"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -99,7 +109,7 @@ function DadosPessoais({onSubmitForm, validateCPF, maskCpf}) {
         label="Promoções"
       />
       <Button type="submit" variant="contained" color="primary">
-        Cadastrar
+        Próximo
       </Button>
     </form>
   );
